@@ -1,4 +1,3 @@
-var target = Argument("target", "Default");
 var solution = GetFiles("*.sln").First();
 var configuration = "Release";
 var publishDirectory = Directory("artifacts");
