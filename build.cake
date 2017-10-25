@@ -1,4 +1,7 @@
 var target = Argument("target", "Default");
+var solution = GetFiles("*.sln").First();
+var configuration = "Release";
+var publishFolder = "artifacts";
 var projects = GetFiles("./**/*.csproj").Select(f => (
         File: f,
         Directory: f.GetDirectory(),
@@ -33,24 +36,28 @@ Task("Restore Projects")
 Task("Build Projects")
     .IsDependentOn("Restore Projects")
     .Does(() => {
-    var settings = new DotNetCoreBuildSettings {
-        Configuration = "Release",
-    };
-    DotNetCoreBuild(GetFiles("*.sln").First().FullPath, settings);
+        DotNetCoreBuild(
+            solution.FullPath,
+            new DotNetCoreBuildSettings {
+                Configuration = configuration
+            }
+        );
     });
 
 // WIP not packing project as expected
-Task("Package Projects")
+Task("Publish Projects")
     .IsDependentOn("Build Projects")
     .Does(() => {
-        foreach(var project in projects.Where(p => p.Framework == "netcoreapp2.0")) {
-            Information($"Packing {project.Name}");
-            var settings = new DotNetCorePackSettings {
-                OutputDirectory = project.Directory + Directory("bin/Release"),
-                NoBuild = true
-            };
-            DotNetCorePack(project.File.FullPath, settings);
+        foreach(var project in projects) {
+            Information(project);
+            DotNetCorePublish(
+                project.Directory.FullPath, 
+                new DotNetCorePublishSettings {
+                    OutputDirectory =  Directory(publishFolder) + Directory(project.Name),
+                    Configuration = configuration
+                }
+            );
         }
     });
 
-RunTarget("Package Projects");
+RunTarget("Publish Projects");
