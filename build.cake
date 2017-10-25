@@ -7,12 +7,6 @@ var settings = GetFiles("./**/*.csproj").Select(f => (
     )
 ).ToList();
 
-Task("Restore Projects")
-    .IsDependentOn("Clean Artifacts")
-    .Does(() => {
-        foreach(var path in settings.Select(s => s.File.FullPath)) DotNetCoreRestore(path);
-    });
-
 Task("Clean Artifacts")
     .ContinueOnError()
     .Does(() => {
@@ -28,6 +22,12 @@ Task("Clean Artifacts")
             DeleteDirectory($"{projectDirectory}/{bin}", delSettings);
             DeleteDirectory($"{projectDirectory}/{obj}", delSettings);
         }
+    });
+
+Task("Restore Projects")
+    .IsDependentOn("Clean Artifacts")
+    .Does(() => {
+        foreach(var path in settings.Select(s => s.File.FullPath)) DotNetCoreRestore(path);
     });
 
 Task("Build Projects")
