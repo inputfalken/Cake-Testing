@@ -1,7 +1,7 @@
 var target = Argument("target", "Default");
 var solution = GetFiles("*.sln").First();
 var configuration = "Release";
-var publishFolder = "artifacts";
+var publishDirectory = Directory("artifacts");
 var projects = GetFiles("./**/*.csproj").Select(f => (
         File: f,
         Directory: f.GetDirectory(),
@@ -20,6 +20,10 @@ Task("Clean Artifacts")
             Recursive = true,
             Force = true
         };
+        if (DirectoryExists(publishDirectory)) {
+            Information($"Removing Directory '{publishDirectory}'.");
+            DeleteDirectory(publishDirectory);
+        }
         foreach(var projectDirectory in projects.Select(p => p.Directory.FullPath)) {
             Information($"Removing {bin} & {obj} Directories in  '{projectDirectory}'");
             DeleteDirectory($"{projectDirectory}/{bin}", settings);
@@ -33,7 +37,7 @@ Task("Restore Projects")
         foreach(var path in projects.Select(p => p.File.FullPath)) DotNetCoreRestore(path);
     });
 
-Task("Build Projects")
+Task("Build Solution")
     .IsDependentOn("Restore Projects")
     .Does(() => {
         DotNetCoreBuild(
@@ -46,14 +50,14 @@ Task("Build Projects")
 
 // WIP not packing project as expected
 Task("Publish Projects")
-    .IsDependentOn("Build Projects")
+    .IsDependentOn("Build Solution")
     .Does(() => {
         foreach(var project in projects) {
             Information(project);
             DotNetCorePublish(
                 project.Directory.FullPath, 
                 new DotNetCorePublishSettings {
-                    OutputDirectory =  Directory(publishFolder) + Directory(project.Name),
+                    OutputDirectory =  publishDirectory + Directory(project.Name),
                     Configuration = configuration
                 }
             );
