@@ -20,8 +20,8 @@ Task("Clean Artifacts")
             Force = true
         };
         if (DirectoryExists(publishDirectory)) {
-            Information($"Removing Directory '{publishDirectory}'.");
-            DeleteDirectory(publishDirectory);
+            Information($"Removing '{publishDirectory.FullPath}'.");
+            DeleteDirectory(publishDirectory, settings);
         }
         foreach(var projectDirectory in projects.Select(p => p.Directory.FullPath)) {
             Information($"Removing {bin} & {obj} Directories in  '{projectDirectory}'");
