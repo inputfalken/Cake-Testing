@@ -4,7 +4,7 @@ var publishDirectory = Directory("artifacts");
 var projects = GetFiles("./**/*.csproj").Select(f => (
         File: f,
         Directory: f.GetDirectory(),
-        Name: f.GetFilename().FullPath.Split(new string[] { ".csproj" }, StringSplitOptions.None)[0],
+        Name: f.GetFilename().FullPath.Split(new string[] { f.GetExtension() }, StringSplitOptions.None)[0],
         Framework: XmlPeek(f,"Project/PropertyGroup/TargetFramework/text()")
     )
 ).ToList();
