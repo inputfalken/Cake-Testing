@@ -9,24 +9,27 @@ var projects = GetFiles("./**/*.csproj").Select(f => (
     )
 ).ToList();
 
+public void RemoveDirectory(DirectoryPath path, DeleteDirectorySettings settings) {
+    if (DirectoryExists(path)) {
+        Information($"Deleting '{path.FullPath}'.");
+        DeleteDirectory(path, settings);
+    } else {
+        Information($"Skipping deletion, could not find '{path.FullPath}'.");
+    }
+}
+
 Task("Clean Artifacts")
-    .ContinueOnError()
     .Does(() => {
-        const string bin = "bin";
-        const string obj = "obj";
-        
+        const string bin = "/bin";
+        const string obj = "/obj";
         var settings =  new DeleteDirectorySettings {
             Recursive = true,
             Force = true
         };
-        if (DirectoryExists(publishDirectory)) {
-            Information($"Removing '{publishDirectory.FullPath}'.");
-            DeleteDirectory(publishDirectory, settings);
-        }
-        foreach(var projectDirectory in projects.Select(p => p.Directory.FullPath)) {
-            Information($"Removing {bin} & {obj} Directories in  '{projectDirectory}'");
-            DeleteDirectory($"{projectDirectory}/{bin}", settings);
-            DeleteDirectory($"{projectDirectory}/{obj}", settings);
+        RemoveDirectory(publishDirectory, settings);
+        foreach(var projectDirectory in projects.Select(p => p.Directory)) {
+            RemoveDirectory(projectDirectory + Directory(bin), settings);
+            RemoveDirectory(projectDirectory + Directory(obj), settings);
         }
     });
 
