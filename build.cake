@@ -50,7 +50,6 @@ Task("Build Solution")
         );
     });
 
-// WIP not packing project as expected
 Task("Publish Projects")
     .IsDependentOn("Build Solution")
     .Does(() => {
