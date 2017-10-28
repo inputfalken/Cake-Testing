@@ -1,5 +1,5 @@
 var solution = GetFiles("*.sln").First();
-var configuration = "Release";
+var configuration = Argument("configuration", "Release");
 var publishDirectory = Directory("artifacts");
 var projects = GetFiles("./**/*.csproj").Select(f => (
         File: f,
