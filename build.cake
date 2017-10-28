@@ -74,7 +74,15 @@ Task("Zip Projects")
            Information($"Zipping '{publishedProject.FullPath}' -> '{zipResult}'");
            Zip(publishedProject.FullPath, zipResult);
         }
-
     });
 
-RunTarget("Zip Projects");
+
+Task("Deploy Projects")
+    .IsDependentOn("Zip Projects")
+    .Does(() => {
+        var zippedFiles = GetFiles($"{publishDirectory}/*.zip");
+        foreach (var zip in zippedFiles) {
+            Information($"Deploying '{zip.FullPath}' -> Somwhere...");
+        }
+    });
+RunTarget("Deploy Projects");
