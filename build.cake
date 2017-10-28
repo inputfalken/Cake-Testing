@@ -65,4 +65,16 @@ Task("Publish Projects")
         }
     });
 
-RunTarget("Publish Projects");
+Task("Zip Projects")
+    .IsDependentOn("Publish Projects")
+    .Does(() => {
+        var publishedProjects = GetDirectories($"{publishDirectory}/*") ;
+        foreach (var publishedProject in publishedProjects) {
+           var zipResult = $"{publishedProject.FullPath}.zip";
+           Information($"Zipping '{publishedProject.FullPath}' -> '{zipResult}'");
+           Zip(publishedProject.FullPath, zipResult);
+        }
+
+    });
+
+RunTarget("Zip Projects");
