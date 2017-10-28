@@ -1,5 +1,5 @@
 # Cake Testing
 ## Example
 ```PowerShell
-  .\cake.ps1 -ScriptArgs @("-Publish=Builds", "-Configuration=Release")
+  .\cake.ps1 -ScriptArgs @("-Dist=dist", "-Configuration=Release")
 ```

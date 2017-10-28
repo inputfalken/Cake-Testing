@@ -1,25 +1,27 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                           Arguments
+//                                           Arguments                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 var configuration = Argument<string>("configuration", "Release");
-var publishTarget = Argument<string>("publish", "artifacts");
+var distTarget = Argument<string>("dist", "dist");
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                          Directories
+//                                          Directories                                           //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 var solution = GetFiles("*.sln").First();
-var publishDirectory = Directory(publishTarget);
+var distDirectory = Directory(distTarget);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                            Projects
+//                                            Projects                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 var projects = GetFiles("./**/*.csproj").Select(f => (
         File: f,
         Directory: f.GetDirectory(),
         Name: f.GetFilename().FullPath.Split(new string[] { f.GetExtension() }, StringSplitOptions.None)[0],
-        Framework: XmlPeek(f,"Project/PropertyGroup/TargetFramework/text()")
+        Framework: XmlPeek(f,"Project/PropertyGroup/TargetFramework/text()"),
+        Sdk: XmlPeek(f,"Project/@Sdk")
     )
 ).ToList();
+var webProjects = projects.Where(x => x.Sdk == "Microsoft.NET.Sdk.Web").ToList();
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                            Methods
+//                                            Methods                                             //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 public void RemoveDirectory(DirectoryPath path, DeleteDirectorySettings settings) {
     if (DirectoryExists(path)) {
@@ -30,17 +32,17 @@ public void RemoveDirectory(DirectoryPath path, DeleteDirectorySettings settings
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                             Tasks
+//                                             Tasks                                              //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+const string bin = "/bin";
 Task("Clean Artifacts")
     .Does(() => {
-        const string bin = "/bin";
         const string obj = "/obj";
         var settings =  new DeleteDirectorySettings {
             Recursive = true,
             Force = true
         };
-        RemoveDirectory(publishDirectory, settings);
+        RemoveDirectory(distDirectory, settings);
         foreach(var projectDirectory in projects.Select(p => p.Directory)) {
             RemoveDirectory(projectDirectory + Directory(bin), settings);
             RemoveDirectory(projectDirectory + Directory(obj), settings);
@@ -49,44 +51,34 @@ Task("Clean Artifacts")
 
 Task("Restore Projects")
     .IsDependentOn("Clean Artifacts")
-    .Does(() => {
-        foreach(var path in projects.Select(p => p.File.FullPath)) DotNetCoreRestore(path);
-    });
+    .Does(() => DotNetCoreRestore(solution.FullPath));
 
-Task("Build Solution")
+
+Task("Publish Projects")
     .IsDependentOn("Restore Projects")
+    .Does(() => DotNetCorePublish( solution.FullPath, new DotNetCorePublishSettings { Configuration = configuration }));
+
+Task("Test Projects")
+    .IsDependentOn("Publish Projects")
     .Does(() => {
-        DotNetCoreBuild(
-            solution.FullPath,
-            new DotNetCoreBuildSettings {
-                Configuration = configuration
+        DotNetCoreTest(
+            "./Tests/Tests.csproj",
+            new DotNetCoreTestSettings() {
+                Configuration = configuration,
+                NoBuild = true        
             }
         );
     });
 
-Task("Publish Projects")
-    .IsDependentOn("Build Solution")
-    .Does(() => {
-        foreach(var project in projects) {
-            Information(project);
-            DotNetCorePublish(
-                project.Directory.FullPath, 
-                new DotNetCorePublishSettings {
-                    OutputDirectory =  publishDirectory + Directory(project.Name),
-                    Configuration = configuration
-                }
-            );
-        }
-    });
-
 Task("Zip Projects")
-    .IsDependentOn("Publish Projects")
+    .IsDependentOn("Test Projects")
     .Does(() => {
-        var publishedProjects = GetDirectories($"{publishDirectory}/*") ;
-        foreach (var publishedProject in publishedProjects) {
-           var zipResult = $"{publishedProject.FullPath}.zip";
-           Information($"Zipping '{publishedProject.FullPath}' -> '{zipResult}'");
-           Zip(publishedProject.FullPath, zipResult);
+        CreateDirectory(distDirectory);
+        foreach (var project in webProjects) {
+           var zipResult = $"{distDirectory}/{project.Name}.zip";
+           var path = project.Directory + Directory($"{bin}/{configuration}");
+           Information($"Zipping '{path}' -> '{zipResult}'");
+           Zip(path, zipResult);
         }
     });
 
@@ -94,12 +86,12 @@ Task("Zip Projects")
 Task("Deploy Projects")
     .IsDependentOn("Zip Projects")
     .Does(() => {
-        var zippedFiles = GetFiles($"{publishDirectory}/*.zip");
+        var zippedFiles = GetFiles($"{distDirectory}/*.zip");
         foreach (var zip in zippedFiles) {
             Information($"Deploying '{zip.FullPath}' -> Somwhere...");
         }
     });
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                             Start
+//                                             Start                                              //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 RunTarget("Deploy Projects");

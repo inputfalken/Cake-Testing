@@ -6,7 +6,7 @@ namespace Tests {
         [Fact]
         public void Large_Coffee_Is_Expected_Volume() {
             var coffee = new Coffee(20, Size.Large, "Latte", "Arabica");
-            Assert.Equal(370d, coffee.Centiliters);
+            Assert.Equal(500d, coffee.Centiliters);
         }
 
         [Fact]
@@ -18,7 +18,7 @@ namespace Tests {
         [Fact]
         public void Small_Coffee_Is_Expected_Volume() {
             var coffee = new Coffee(20, Size.Small, "Latte", "Arabica");
-            Assert.Equal(370d, coffee.Centiliters);
+            Assert.Equal(200d, coffee.Centiliters);
         }
     }
 }
