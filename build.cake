@@ -66,7 +66,7 @@ Task("Zip Applications")
         CreateDirectory(distDirectory);
         foreach (var project in applicationsProjects) {
            var zipResult = $"{distDirectory}/{project.Name}.zip";
-           var path = project.Directory + Directory($"{bin}/{configuration}");
+           var path = project.Directory + Directory($"{bin}/{configuration}/{project.Framework}/publish/");
            Information($"Zipping '{path}' -> '{zipResult}'");
            Zip(path, zipResult);
         }
