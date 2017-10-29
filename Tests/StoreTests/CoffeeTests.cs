@@ -1,7 +1,7 @@
 ﻿using Store;
 using Xunit;
 
-namespace Tests {
+namespace StoreTests {
     public class CoffeeTests {
         [Fact]
         public void Large_Coffee_Is_Expected_Volume() {

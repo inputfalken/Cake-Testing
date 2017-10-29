@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webapp-1", "src\apps\Webapp-1\Webapp-1.csproj", "{15B2790C-98FB-4272-BF1C-137616B77AA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web1", "src\apps\Web1\Web1.csproj", "{15B2790C-98FB-4272-BF1C-137616B77AA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webapp-2", "src\apps\Webapp-2\Webapp-2.csproj", "{45195A4D-5D2A-450D-96AB-F25D38DC2951}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web2", "src\apps\Web2\Web2.csproj", "{45195A4D-5D2A-450D-96AB-F25D38DC2951}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store", "src\libs\Store\Store.csproj", "{5E3CE36D-C25C-40CA-A31C-C94C75FBC998}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StoreTests", "Tests\StoreTests\StoreTests.csproj", "{7D0C6BB1-F4E1-4D38-ACC0-EADB39B40F74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp-1Tests", "Tests\WebApp-1Tests\WebApp-1Tests.csproj", "{F9B9E955-AC65-470D-BD7A-EA289E64B1EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp-1Tests", "Tests\WebApp-1Tests\WebApp-1Tests.csproj", "{F9B9E955-AC65-470D-BD7A-EA289E64B1EE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DEAC7AAF-3C9A-42C2-8CA8-B7B12C717602}"
 EndProject

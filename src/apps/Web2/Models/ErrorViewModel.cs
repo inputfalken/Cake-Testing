@@ -1,6 +1,4 @@
-using System;
-
-namespace Cake.Models
+namespace Web2.Models
 {
     public class ErrorViewModel
     {

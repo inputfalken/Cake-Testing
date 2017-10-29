@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Cake.Models;
+using Web1.Models;
 
-namespace Cake.Controllers
+namespace Web1.Controllers
 {
     public class HomeController : Controller
     {

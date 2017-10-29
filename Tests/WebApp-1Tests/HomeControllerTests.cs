@@ -1,5 +1,5 @@
-﻿using Cake.Controllers;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Web1.Controllers;
 using Xunit;
 
 namespace WebApp_1Tests {
