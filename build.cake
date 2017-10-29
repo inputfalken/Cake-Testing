@@ -1,8 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Load Scripts                                          //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#load "./build/project.cake"
-//NOTE Requires './build/project.cake'
 #load "./build/helperMethods.cake"
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           Arguments                                            //
@@ -14,12 +12,16 @@ var distTarget = Argument<string>("dist", "dist");
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 var solution = GetFiles("*.sln").First();
 var distDirectory = Directory(distTarget);
+var appDirectory = Directory("./src/apps/");
+var testDirectory = Directory("./Tests/");
+var libDirectory = Directory("./src/libs/");
+////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            Projects                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 var projects = GetProjects("./**/*.csproj");
-var applicationsProjects = projects.Where(p => p.File.FullPath.Contains("/src/apps/")).ToList();
-var testProjects = projects.Where(p => p.File.FullPath.Contains("/Tests/")).ToList();
-var libProjects = projects.Where(p => p.File.FullPath.Contains("/src/libs/")).ToList();
+var applicationsProjects = projects.Where(p => p.File.FullPath.Contains(appDirectory.Path.FullPath)).ToList();
+var testProjects = projects.Where(p => p.File.FullPath.Contains(testDirectory.Path.FullPath)).ToList();
+var libProjects = projects.Where(p => p.File.FullPath.Contains(libDirectory.Path.FullPath)).ToList();
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             Tasks                                              //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,9 +29,9 @@ const string bin = "/bin";
 
 Task("Project Information")
     .Does(() => {
-        Information($"{ProjectOrProjects(applicationsProjects)} in apps.");
-        Information($"{ProjectOrProjects(testProjects)} in Test.");
-        Information($"{ProjectOrProjects(libProjects)} libs.");
+        Information($"{ProjectOrProjects(applicationsProjects)} in directory '{appDirectory.Path.FullPath}'.");
+        Information($"{ProjectOrProjects(testProjects)} in directory '{testDirectory.Path.FullPath}'.");
+        Information($"{ProjectOrProjects(libProjects)} in directory '{libDirectory.Path.FullPath}'.");
     });
 
 Task("Clean Build")
