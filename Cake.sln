@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webapp-1", "Webapp-1\Webapp-1.csproj", "{15B2790C-98FB-4272-BF1C-137616B77AA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webapp-1", "src\apps\Webapp-1\Webapp-1.csproj", "{15B2790C-98FB-4272-BF1C-137616B77AA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webapp-2", "Webapp-2\Webapp-2.csproj", "{45195A4D-5D2A-450D-96AB-F25D38DC2951}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webapp-2", "src\apps\Webapp-2\Webapp-2.csproj", "{45195A4D-5D2A-450D-96AB-F25D38DC2951}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store", "Store\Store.csproj", "{5E3CE36D-C25C-40CA-A31C-C94C75FBC998}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store", "src\libs\Store\Store.csproj", "{5E3CE36D-C25C-40CA-A31C-C94C75FBC998}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{7D0C6BB1-F4E1-4D38-ACC0-EADB39B40F74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\StoreTests\StoreTests.csproj", "{7D0C6BB1-F4E1-4D38-ACC0-EADB39B40F74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
