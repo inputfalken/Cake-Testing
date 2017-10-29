@@ -1,3 +1,4 @@
+#load "./project.cake"
 public IReadOnlyList<Project> GetProjects(string path) {
     return GetFiles(path)
             .Select(f => new Project(
