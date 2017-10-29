@@ -23,7 +23,7 @@ var applicationsProjects = GetProjects("./src/apps/**/*.csproj");
 //                                             Tasks                                              //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 const string bin = "/bin";
-Task("Clean Artifacts")
+Task("Clean Build")
     .Does(() => {
         const string obj = "/obj";
         var settings =  new DeleteDirectorySettings {
@@ -38,16 +38,15 @@ Task("Clean Artifacts")
     });
 
 Task("Restore Projects")
-    .IsDependentOn("Clean Artifacts")
+    .IsDependentOn("Clean Build")
     .Does(() => DotNetCoreRestore(solution.FullPath));
 
-
-Task("Publish Projects")
+Task("Build & Publish Projects")
     .IsDependentOn("Restore Projects")
     .Does(() => DotNetCorePublish( solution.FullPath, new DotNetCorePublishSettings { Configuration = configuration }));
 
 Task("Test Projects")
-    .IsDependentOn("Publish Projects")
+    .IsDependentOn("Build & Publish Projects")
     .Does(() => {
         var testProjects = GetFiles("./Tests/**/*.csproj");
         foreach(var project in testProjects) {
@@ -61,7 +60,7 @@ Task("Test Projects")
         }
     });
 
-Task("Zip Projects")
+Task("Zip Applications")
     .IsDependentOn("Test Projects")
     .Does(() => {
         CreateDirectory(distDirectory);
@@ -74,8 +73,8 @@ Task("Zip Projects")
     });
 
 
-Task("Deploy Projects")
-    .IsDependentOn("Zip Projects")
+Task("Deploy Applications")
+    .IsDependentOn("Zip Applications")
     .Does(() => {
         var zippedFiles = GetFiles($"{distDirectory}/*.zip");
         foreach (var zip in zippedFiles) {
@@ -85,4 +84,4 @@ Task("Deploy Projects")
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             Start                                              //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-RunTarget("Deploy Projects");
+RunTarget("Deploy Applications");
