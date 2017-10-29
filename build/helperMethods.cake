@@ -10,6 +10,7 @@ public IReadOnlyList<Project> GetProjects(string path) {
             )
             .ToList();
 }
+
 public void RemoveDirectory(DirectoryPath path, DeleteDirectorySettings settings) {
     if (DirectoryExists(path)) {
         Information($"Deleting '{path.FullPath}'.");
@@ -17,4 +18,12 @@ public void RemoveDirectory(DirectoryPath path, DeleteDirectorySettings settings
     } else {
         Information($"Skipping deletion, could not find '{path.FullPath}'.");
     }
+}
+
+
+public string ProjectOrProjects<T>(IReadOnlyCollection<T> projects) {
+    var count = projects.Count;
+    if (count == 0) return "Found no project";
+    else if (count == 1) return $"Found {count} project";
+    else return $"Found {count} projects ";
 }

@@ -14,16 +14,26 @@ var distTarget = Argument<string>("dist", "dist");
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 var solution = GetFiles("*.sln").First();
 var distDirectory = Directory(distTarget);
-////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            Projects                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 var projects = GetProjects("./**/*.csproj");
-var applicationsProjects = GetProjects("./src/apps/**/*.csproj");
+var applicationsProjects = projects.Where(p => p.File.FullPath.Contains("/src/apps/")).ToList();
+var testProjects = projects.Where(p => p.File.FullPath.Contains("/Tests/")).ToList();
+var libProjects = projects.Where(p => p.File.FullPath.Contains("/src/libs/")).ToList();
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             Tasks                                              //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 const string bin = "/bin";
+
+Task("Project Information")
+    .Does(() => {
+        Information($"{ProjectOrProjects(applicationsProjects)} in apps.");
+        Information($"{ProjectOrProjects(testProjects)} in Test.");
+        Information($"{ProjectOrProjects(libProjects)} libs.");
+    });
+
 Task("Clean Build")
+    .IsDependentOn("Project Information")
     .Does(() => {
         const string obj = "/obj";
         var settings =  new DeleteDirectorySettings {
@@ -48,10 +58,9 @@ Task("Build & Publish Projects")
 Task("Test Projects")
     .IsDependentOn("Build & Publish Projects")
     .Does(() => {
-        var testProjects = GetFiles("./Tests/**/*.csproj");
         foreach(var project in testProjects) {
             DotNetCoreTest(
-                project.FullPath,
+                project.File.FullPath,
                 new DotNetCoreTestSettings() {
                     Configuration = configuration,
                     NoBuild = true
