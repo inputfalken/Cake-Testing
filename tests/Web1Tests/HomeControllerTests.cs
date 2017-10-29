@@ -2,7 +2,7 @@
 using Web1.Controllers;
 using Xunit;
 
-namespace WebApp_1Tests {
+namespace Web1Tests {
     public class HomeControllerTests {
         [Fact]
         public void Test1() {
