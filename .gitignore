@@ -1,3 +1,4 @@
 src/apps/Web2/wwwroot/lib/**
 src/apps/Web1/wwwroot/lib/**
 tools/**
+dist/**
