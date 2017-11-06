@@ -18,7 +18,7 @@ var distTarget = Argument<string>("dist", "dist");
 var solution = GetFiles("*.sln").First();
 var distDirectory = Directory(distTarget);
 var appDirectory = Directory("./src/apps/");
-var testDirectory = Directory("./Tests/");
+var testDirectory = Directory("./tests/");
 var libDirectory = Directory("./src/libs/");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
